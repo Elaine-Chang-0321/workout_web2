@@ -1,371 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Log</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
-    <style>.fun-font{font-family:'Baloo 2',cursive;}</style>
-    <style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}</style>
-    <style>
-        body {
-            background-image: url('workout.png');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center; /* 確保背景圖片置中 */
-            background-blend-mode: overlay; /* 混合模式 */
-        }
-        .font-inter {
-            font-family: 'Inter', sans-serif;
-        }
-        /* For mobile, table will stack as cards */
-        @media (max-width: 768px) {
-            .table-responsive .table-row {
-                display: block;
-                margin-bottom: 1rem;
-                padding: 1rem;
-                border: 1px solid #e2e8f0; /* Tailwind gray-200 */
-                border-radius: 0.5rem; /* Tailwind rounded-lg */
-            }
-            .table-responsive .table-cell {
-                display: flex;
-                justify-content: space-between;
-                padding: 0.5rem 0;
-                border-bottom: 1px solid #e2e8f0; /* Tailwind gray-200 */
-            }
-            .table-responsive .table-cell:last-child {
-                border-bottom: none;
-            }
-            .table-responsive .table-cell::before {
-                content: attr(data-label);
-                font-weight: bold;
-                margin-right: 0.5rem;
-            }
-            .table-responsive thead {
-                display: none;
-            }
-        }
-        input:invalid {
-            border-color: #DC2626 !important;
-            box-shadow: 0 0 0 4px rgba(252, 165, 165, 0.4) !important;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout Log</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    .fun-font{font-family:'Baloo 2',cursive;}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    body{
+      background-image:url('workout.png');
+      background-size:cover;
+      background-attachment:fixed;
+      background-position:center;
+      background-blend-mode:overlay;
+    }
+    .font-inter{font-family:'Inter',sans-serif;}
+    @media (max-width: 768px){
+      .table-responsive .table-row{display:block;margin-bottom:1rem;padding:1rem;border:1px solid #e2e8f0;border-radius:.5rem}
+      .table-responsive .table-cell{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid #e2e8f0}
+      .table-responsive .table-cell:last-child{border-bottom:none}
+      .table-responsive .table-cell::before{content:attr(data-label);font-weight:bold;margin-right:.5rem}
+      .table-responsive thead{display:none}
+    }
+    input:invalid{
+      border-color:#DC2626!important;
+      box-shadow:0 0 0 4px rgba(252,165,165,.4)!important;
+    }
+  </style>
 </head>
 <body class="font-inter bg-gray-100">
-    <header class="w-full bg-white shadow-sm py-4 px-6 md:px-12 flex items-center justify-between">
-      <!-- 左側 Logo -->
-      <div class="fun-font text-2xl md:text-3xl font-extrabold text-[#1F2A37] select-none">
-        Let’s workout!
+  <!-- Header -->
+  <header class="w-full bg-white shadow-sm py-4 px-6 md:px-12 flex items-center justify-between">
+    <div class="fun-font text-2xl md:text-3xl font-extrabold text-[#1F2A37] select-none">
+      Let’s workout!
+    </div>
+    <a href="index.html"
+       class="bg-[#1F1F1F] text-white font-semibold px-6 py-2 rounded-full hover:bg-[#151515] active:scale-[0.97] transition">
+       Home
+    </a>
+  </header>
+
+  <!-- Page mask -->
+  <div class="relative">
+    <div class="absolute inset-0 bg-white/70 -z-10"></div>
+
+    <div class="max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
+      <!-- Form -->
+      <section class="bg-[#FFF4B8] rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-[#EADFA8] p-6 md:p-10">
+        <header class="mb-6 md:mb-8">
+          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#1F2A37]">Workout Log</h1>
+          <p id="toast" class="hidden mt-3 text-sm"></p>
+        </header>
+
+        <form id="workoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+          <div class="flex flex-col gap-2">
+            <label for="workoutDate" class="text-sm font-semibold text-[#1F2A37]">Date:</label>
+            <input type="date" id="workoutDate" required
+                   class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+            <p id="workoutDateError" class="text-xs text-[#DC2626] mt-1"></p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="exerciseName" class="text-sm font-semibold text-[#1F2A37]">Exercise:</label>
+            <input type="text" id="exerciseName" required
+                   class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+            <p id="exerciseNameError" class="text-xs text-[#DC2626] mt-1"></p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="weightKg" class="text-sm font-semibold text-[#1F2A37]">Weight (kg):</label>
+            <input type="number" id="weightKg" required min="1" step="1"
+                   class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+            <p id="weightKgError" class="text-xs text-[#DC2626] mt-1"></p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="reps" class="text-sm font-semibold text-[#1F2A37]">Reps:</label>
+            <input type="number" id="reps" required min="1" step="1"
+                   class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+            <p id="repsError" class="text-xs text-[#DC2626] mt-1"></p>
+          </div>
+
+          <div class="flex flex-col gap-2 md:col-span-2">
+            <label for="note" class="text-sm font-semibold text-[#1F2A37]">備註 Note:</label>
+            <textarea id="note" rows="3" placeholder="optional"
+                      class="min-h-[120px] rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 py-3 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition"></textarea>
+            <p id="noteError" class="text-xs text-[#DC2626] mt-1"></p>
+          </div>
+
+          <button type="submit" id="submitBtn"
+                  class="w-full h-12 md:h-14 rounded-full bg-[#0F2E29] text-white text-base md:text-lg font-semibold tracking-wide shadow-[0_8px_20px_rgba(15,46,41,0.25)] hover:bg-[#0B241F] active:scale-[0.99] transition">
+            Save Workout
+          </button>
+        </form>
+      </section>
+
+      <!-- Actions -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button id="clearAllBtn" class="h-10 rounded-full bg-[#DC2626] text-white font-semibold hover:bg-[#B91C1C] transition">Clear All</button>
+        <button id="exportJsonBtn" class="h-10 rounded-full border border-[#0F766E] text-[#0F766E] font-semibold hover:bg-[#0F766E]/10 transition">Export JSON</button>
+        <label class="h-10 rounded-full border border-[#A16207] text-[#A16207] font-semibold hover:bg-[#A16207]/10 transition grid place-items-center cursor-pointer">
+          Import JSON
+          <input id="importJsonInput" type="file" accept="application/json" class="hidden" />
+        </label>
       </div>
 
-      <!-- 右側 Home 按鈕 -->
-      <a href="index.html"
-         class="bg-[#1F1F1F] text-white font-semibold px-6 py-2 rounded-full hover:bg-[#151515] active:scale-[0.97] transition">
-         Home
-      </a>
-    </header>
-    <div class="relative">
-        <div class="absolute inset-0 bg-white/70 -z-10"></div>
-        <div class="max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
-        <!-- Workout Input Form -->
-        <section class="bg-[#FFF4B8] rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-[#EADFA8] p-6 md:p-10">
-            <header class="mb-6 md:mb-8">
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#1F2A37]">Workout Log</h1>
-            </header>
-            <form id="workoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                <div class="flex flex-col gap-2">
-                    <label for="workoutDate" class="text-sm font-semibold text-[#1F2A37]">Date:</label>
-                    <input type="date" id="workoutDate" required class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
-                    <p id="workoutDateError" class="text-xs text-[#DC2626] mt-1"></p>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label for="exerciseName" class="text-sm font-semibold text-[#1F2A37]">Exercise:</label>
-                    <input type="text" id="exerciseName" required class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
-                    <p id="exerciseNameError" class="text-xs text-[#DC2626] mt-1"></p>
-                </div>
-                <div class="flex flex-col gap-2">
-                        <label for="weightKg" class="text-sm font-semibold text-[#1F2A37]">Weight (kg):</label>
-                        <input type="number" id="weightKg" required min="1" class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
-                        <p id="weightKgError" class="text-xs text-[#DC2626] mt-1"></p>
-                    </div>
-                <div class="flex flex-col gap-2">
-                        <label for="reps" class="text-sm font-semibold text-[#1F2A37]">Reps:</label>
-                        <input type="number" id="reps" required min="1" class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
-                        <p id="repsError" class="text-xs text-[#DC2626] mt-1"></p>
-                    </div>
-                <div class="flex flex-col gap-2 md:col-span-2">
-                    <label for="note" class="text-sm font-semibold text-[#1F2A37]">備註 Note:</label>
-                    <textarea id="note" rows="3" placeholder="optional" class="min-h-[120px] rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 py-3 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition"></textarea>
-                    <p id="noteError" class="text-xs text-[#DC2626] mt-1"></p>
-                </div>
-                <button type="submit" class="w-full h-12 md:h-14 rounded-full bg-[#0F2E29] text-white text-base md:text-lg font-semibold tracking-wide shadow-[0_8px_20px_rgba(15,46,41,0.25)] hover:bg-[#0B241F] active:scale-[0.99] transition">Save Workout</button>
-            </form>
-        </section>
- 
-        <!-- Action Buttons -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <button id="clearAllBtn" class="h-10 rounded-full bg-[#DC2626] text-white font-semibold hover:bg-[#B91C1C] transition">Clear All</button>
-            <button id="exportJsonBtn" class="h-10 rounded-full border border-[#0F766E] text-[#0F766E] font-semibold hover:bg-[#0F766E]/10 transition">Export JSON</button>
-            <label class="h-10 rounded-full border border-[#A16207] text-[#A16207] font-semibold hover:bg-[#A16207]/10 transition grid place-items-center cursor-pointer">
-              Import JSON
-              <input id="importJsonInput" type="file" accept="application/json" class="hidden" />
-            </label>
+      <!-- Table -->
+      <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 class="text-2xl font-bold mb-4">Workout Records</h2>
+        <div class="overflow-x-auto table-responsive">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exercise</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight (kg)</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reps</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Note</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="workoutTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
         </div>
-
-        <!-- Workout Records Table -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Workout Records</h2>
-            <div class="overflow-x-auto table-responsive">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exercise</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight (kg)</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reps</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Note</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="workoutTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Workout records will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    </div>
-    <script>
-        // JavaScript will be embedded here
-        const workoutForm = document.getElementById('workoutForm');
-        const workoutDateInput = document.getElementById('workoutDate');
-        const exerciseNameInput = document.getElementById('exerciseName');
-        const weightKgInput = document.getElementById('weightKg');
-        const repsInput = document.getElementById('reps');
-        const noteInput = document.getElementById('note');
-        const workoutTableBody = document.getElementById('workoutTableBody');
-        const clearAllBtn = document.getElementById('clearAllBtn');
-        const exportJsonBtn = document.getElementById('exportJsonBtn');
-        const importJsonInput = document.getElementById('importJsonInput');
+  <script>
+    /* ============ 1) 設定 API 位置（請換成你的網址；不要結尾斜線） ============ */
+    const API_BASE = "https://workout-api.zeabur.app"; // ←←← 替換成你的 API 網域
 
-        // Initial data structure for localStorage
-        let store = {
-            exercises: [],
-            workouts: [],
-            sets: []
-        };
+    /* ============ 2) 後端 API 封裝 ============ */
+    async function apiCreate({ date, exercise, weightKg, reps, note }) {
+      const r = await fetch(`${API_BASE}/api/workouts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date,
+          exercise,
+          weight_kg: weightKg ? Number(weightKg) : null,
+          reps: reps ? Number(reps) : null,
+          note: note || null
+        })
+      });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+    async function apiList() {
+      const r = await fetch(`${API_BASE}/api/workouts`);
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+    async function apiUpdate(id, payload) {
+      const r = await fetch(`${API_BASE}/api/workouts/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+    async function apiDelete(id) {
+      const r = await fetch(`${API_BASE}/api/workouts/${id}`, { method: "DELETE" });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
 
-        // Load data from localStorage
-        function loadStore() {
-            const storedData = localStorage.getItem('gymlog:v1');
-            if (storedData) {
-                store = JSON.parse(storedData);
-            }
+    /* ============ 3) UI 元件取得 ============ */
+    const toast = document.getElementById('toast');
+    const workoutForm = document.getElementById('workoutForm');
+    const workoutDateInput = document.getElementById('workoutDate');
+    const exerciseNameInput = document.getElementById('exerciseName');
+    const weightKgInput = document.getElementById('weightKg');
+    const repsInput = document.getElementById('reps');
+    const noteInput = document.getElementById('note');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const workoutTableBody = document.getElementById('workoutTableBody');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const exportJsonBtn = document.getElementById('exportJsonBtn');
+    const importJsonInput = document.getElementById('importJsonInput');
+
+    /* ============ 4) 小工具 ============ */
+    let editingId = null;
+
+    function showToast(msg, type = "ok") {
+      toast.textContent = msg;
+      toast.className = `mt-3 text-sm ${type === "ok" ? "text-green-700" : "text-red-600"}`;
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 2500);
+    }
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      submitBtn.textContent = isLoading
+        ? (editingId ? "Updating..." : "Saving...")
+        : (editingId ? "Update Workout" : "Save Workout");
+    }
+
+    /* ============ 5) 渲染表格 ============ */
+    async function renderWorkouts() {
+      workoutTableBody.innerHTML = `
+        <tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+      `;
+      try {
+        const rows = await apiList(); // [{id,date,exercise,weight_kg,reps,note,created_at}, ...]
+        if (!rows.length) {
+          workoutTableBody.innerHTML = `
+            <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">No records yet.</td></tr>
+          `;
+          return;
         }
-
-        // Save data to localStorage
-        function saveStore() {
-            localStorage.setItem('gymlog:v1', JSON.stringify(store));
+        workoutTableBody.innerHTML = "";
+        for (const r of rows) {
+          const tr = document.createElement("tr");
+          tr.classList.add("table-row");
+          tr.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Date">${r.date ?? ""}</td>
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Exercise">${r.exercise ?? ""}</td>
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Weight (kg)">${r.weight_kg ?? ""}</td>
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Reps">${r.reps ?? ""}</td>
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Note">${r.note ?? ""}</td>
+            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Actions">
+              <button data-id="${r.id}" data-type="edit" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+              <button data-id="${r.id}" data-type="delete" class="text-red-600 hover:text-red-900">Delete</button>
+            </td>
+          `;
+          workoutTableBody.appendChild(tr);
         }
+      } catch (e) {
+        workoutTableBody.innerHTML = `
+          <tr><td colspan="6" class="px-6 py-8 text-center text-red-600">Failed to load: ${e.message}</td></tr>
+        `;
+      }
+    }
 
-        // Generate a simple UUID
-        function generateUUID() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    /* ============ 6) 送出表單（新增 / 更新） ============ */
+    workoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const date = workoutDateInput.value;
+      const exercise = exerciseNameInput.value.trim();
+      const weightKg = Number(weightKgInput.value);
+      const reps = Number(repsInput.value);
+      const note = noteInput.value.trim();
+
+      if (!date || !exercise || !Number.isFinite(weightKg) || !Number.isInteger(reps) || weightKg <= 0 || reps <= 0) {
+        showToast('Please fill all fields correctly (Weight/Reps must be positive integers).', 'err');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        if (editingId) {
+          await apiUpdate(editingId, {
+            date, exercise, weight_kg: weightKg, reps, note
+          });
+          showToast("Updated!");
+          editingId = null;
+          submitBtn.textContent = "Save Workout";
+        } else {
+          await apiCreate({ date, exercise, weightKg, reps, note });
+          showToast("Saved!");
         }
-
-        // Render workout records
-        function renderWorkouts() {
-            workoutTableBody.innerHTML = ''; // Clear existing records
-
-            // Group sets by workout and exercise for display
-            const groupedWorkouts = {}; // workoutId -> { workoutDate, exercises: { exerciseId -> { exerciseName, sets: [] } } }
-
-            store.sets.forEach(set => {
-                const workout = store.workouts.find(w => w.id === set.workoutId);
-                const exercise = store.exercises.find(e => e.id === set.exerciseId);
-
-                if (workout && exercise) {
-                    if (!groupedWorkouts[workout.id]) {
-                        groupedWorkouts[workout.id] = {
-                            workoutDate: workout.workoutDate,
-                            exercises: {}
-                        };
-                    }
-                    if (!groupedWorkouts[workout.id].exercises[exercise.id]) {
-                        groupedWorkouts[workout.id].exercises[exercise.id] = {
-                            exerciseName: exercise.name,
-                            sets: []
-                        };
-                    }
-                    groupedWorkouts[workout.id].exercises[exercise.id].sets.push(set);
-                }
-            });
-
-            // Sort workouts by date descending
-            const sortedWorkoutIds = Object.keys(groupedWorkouts).sort((a, b) => {
-                const dateA = new Date(groupedWorkouts[a].workoutDate);
-                const dateB = new Date(groupedWorkouts[b].workoutDate);
-                return dateB - dateA;
-            });
-
-
-            sortedWorkoutIds.forEach(workoutId => {
-                const workoutData = groupedWorkouts[workoutId];
-                const workoutDate = workoutData.workoutDate;
-                const exercises = Object.values(workoutData.exercises);
-
-                exercises.forEach(exercise => {
-                    exercise.sets.forEach(set => {
-                        const row = workoutTableBody.insertRow();
-                        row.classList.add('table-row'); // For mobile styling
-                        row.innerHTML = `
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Date">${workoutDate}</td>
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Exercise">${exercise.exerciseName}</td>
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Weight (kg)">${set.weightKg}</td>
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Reps">${set.reps}</td>
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Note">${set.note || ''}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-cell" data-label="Actions">
-                                <button data-id="${set.id}" data-type="edit" class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
-                                <button data-id="${set.id}" data-type="delete" class="text-red-600 hover:text-red-900">Delete</button>
-                            </td>
-                        `;
-                    });
-                });
-            });
-        }
-
-        // Handle form submission
-        workoutForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const workoutDate = workoutDateInput.value;
-            const exerciseName = exerciseNameInput.value.trim();
-            const weightKg = parseFloat(weightKgInput.value);
-            const reps = parseInt(repsInput.value);
-            const note = noteInput.value.trim();
-
-            // Validation
-            if (!workoutDate || !exerciseName || isNaN(weightKg) || isNaN(reps) || weightKg <= 0 || reps <= 0) {
-                alert('Please fill in all required fields correctly. Weight must be > 0 and Reps must be a positive integer.');
-                return;
-            }
-
-            // Find or create workout for the day
-            let workout = store.workouts.find(w => w.workoutDate === workoutDate);
-            if (!workout) {
-                workout = { id: generateUUID(), workoutDate, note: '', createdAt: new Date().toISOString() };
-                store.workouts.push(workout);
-            }
-            // Update note if provided
-
-            // Find or create exercise
-            let exercise = store.exercises.find(ex => ex.name.toLowerCase() === exerciseName.toLowerCase());
-            if (!exercise) {
-                exercise = { id: generateUUID(), name: exerciseName, createdAt: new Date().toISOString() };
-                store.exercises.push(exercise);
-            }
-
-            // Create set record
-            const setRecord = {
-                id: generateUUID(),
-                workoutId: workout.id,
-                exerciseId: exercise.id,
-                weightKg,
-                reps,
-                note: note,
-                createdAt: new Date().toISOString()
-            };
-            store.sets.push(setRecord);
-
-            saveStore();
-            renderWorkouts();
-            workoutForm.reset(); // Clear form
-        });
-
-        // Handle Edit/Delete buttons
-        workoutTableBody.addEventListener('click', (e) => {
-            const target = e.target;
-            const id = target.dataset.id;
-            const type = target.dataset.type;
-
-            if (type === 'delete') {
-                if (confirm('Are you sure you want to delete this record?')) {
-                    store.sets = store.sets.filter(set => set.id !== id);
-                    saveStore();
-                    renderWorkouts();
-                }
-            } else if (type === 'edit') {
-                alert('Edit functionality not yet implemented.'); // Placeholder
-                // For a full implementation, you would populate the form with the set's data
-                // and change the save button to an update button.
-            }
-        });
-
-        // Clear All Data
-        clearAllBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all workout data? This action cannot be undone.')) {
-                store = { exercises: [], workouts: [], sets: [] };
-                saveStore();
-                renderWorkouts();
-            }
-        });
-
-        // Export JSON
-        exportJsonBtn.addEventListener('click', () => {
-            const dataStr = JSON.stringify(store, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-            const exportFileDefaultName = 'workout_log.json';
-
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-        });
-
-        // Import JSON
-
-        importJsonInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                return;
-            }
-
-            if (confirm('Are you sure you want to import data? This will overwrite existing data.')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        // Basic validation for imported data structure
-                        if (importedData.exercises && importedData.workouts && importedData.sets) {
-                            store = importedData;
-                            saveStore();
-                            renderWorkouts();
-                            alert('Data imported successfully!');
-                        } else {
-                            alert('Invalid JSON structure for workout data.');
-                        }
-                    } catch (error) {
-                        alert('Failed to parse JSON file: ' + error.message);
-                    }
-                };
-                reader.readAsText(file);
-            }
-            importJsonInput.value = ''; // Clear the input so the same file can be imported again
-        });
-
-
-        // Initialize
-        loadStore();
-        renderWorkouts();
-
-        // Set default date to today
+        workoutForm.reset();
         workoutDateInput.value = new Date().toISOString().split('T')[0];
-    </script>
+        await renderWorkouts();
+      } catch (e2) {
+        showToast("Failed: " + e2.message, "err");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    /* ============ 7) 表格按鈕：刪除 / 編輯 ============ */
+    workoutTableBody.addEventListener('click', async (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const type = btn.dataset.type;
+
+      if (type === "delete") {
+        if (!confirm("Delete this record?")) return;
+        try {
+          await apiDelete(id);
+          showToast("Deleted");
+          renderWorkouts();
+        } catch (err) {
+          showToast("Delete failed: " + err.message, "err");
+        }
+      } else if (type === "edit") {
+        // 將該列資料讀入表單
+        const tr = btn.closest('tr');
+        const tds = tr.querySelectorAll('.table-cell');
+        const date = tds[0].textContent.trim();
+        const exercise = tds[1].textContent.trim();
+        const weight = tds[2].textContent.trim();
+        const reps = tds[3].textContent.trim();
+        const note = tds[4].textContent.trim();
+
+        workoutDateInput.value = date;
+        exerciseNameInput.value = exercise;
+        weightKgInput.value = weight;
+        repsInput.value = reps;
+        noteInput.value = note;
+
+        editingId = id;
+        submitBtn.textContent = "Update Workout";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    /* ============ 8) 清空 / 匯出 / 匯入 ============ */
+    clearAllBtn.addEventListener('click', async () => {
+      if (!confirm("Delete ALL records?")) return;
+      try {
+        const all = await apiList();
+        await Promise.all(all.map(r => apiDelete(r.id)));
+        showToast("All cleared.");
+        renderWorkouts();
+      } catch (e) {
+        showToast("Clear failed: " + e.message, "err");
+      }
+    });
+
+    exportJsonBtn.addEventListener('click', async () => {
+      try {
+        const rows = await apiList();
+        const dataStr = JSON.stringify(rows, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "workout_export.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        showToast("Export failed: " + e.message, "err");
+      }
+    });
+
+    importJsonInput.addEventListener('change', async (ev) => {
+      const file = ev.target.files?.[0];
+      if (!file) return;
+
+      if (!confirm("Import JSON and insert each row as a workout?")) {
+        importJsonInput.value = "";
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        // 支援兩種格式：1) 直接陣列 2) 物件含陣列
+        const arr = Array.isArray(data) ? data : (data.sets || data.workouts || []);
+        if (!Array.isArray(arr)) throw new Error("Unrecognized JSON structure.");
+
+        for (const row of arr) {
+          const payload = {
+            date: row.date || row.workoutDate || new Date().toISOString().slice(0,10),
+            exercise: row.exercise || row.exerciseName || "Unknown",
+            weightKg: row.weight_kg ?? row.weightKg ?? null,
+            reps: row.reps ?? null,
+            note: row.note ?? ""
+          };
+          await apiCreate(payload);
+        }
+        showToast("Import done.");
+        renderWorkouts();
+      } catch (e) {
+        showToast("Import failed: " + e.message, "err");
+      } finally {
+        importJsonInput.value = "";
+      }
+    });
+
+    /* ============ 9) 初始：今天日期 + 載入列表 ============ */
+    workoutDateInput.value = new Date().toISOString().split('T')[0];
+    renderWorkouts();
+  </script>
 </body>
 </html>
