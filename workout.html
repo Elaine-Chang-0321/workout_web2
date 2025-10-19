@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+    <style>.fun-font{font-family:'Baloo 2',cursive;}</style>
     <style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}</style>
     <style>
         body {
@@ -55,6 +57,18 @@
     </style>
 </head>
 <body class="font-inter bg-gray-100">
+    <header class="w-full bg-white shadow-sm py-4 px-6 md:px-12 flex items-center justify-between">
+      <!-- 左側 Logo -->
+      <div class="fun-font text-2xl md:text-3xl font-extrabold text-[#1F2A37] select-none">
+        Let’s workout!
+      </div>
+
+      <!-- 右側 Home 按鈕 -->
+      <a href="index.html"
+         class="bg-[#1F1F1F] text-white font-semibold px-6 py-2 rounded-full hover:bg-[#151515] active:scale-[0.97] transition">
+         Home
+      </a>
+    </header>
     <div class="relative">
         <div class="absolute inset-0 bg-white/70 -z-10"></div>
         <div class="max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
