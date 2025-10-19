@@ -1,55 +1,42 @@
-# 網頁規格說明書 (index.html)
+# 健身網站與API專案規格 (Workout Web Application & API Specification)
 
-## 1. 檔案名稱
-`index.html`
+## 1. 專案簡介
+本專案包含一個健身網站前端介面 (Workout_Web2) 及一個後端API服務 (Workout_API)，旨在提供使用者健身相關資訊與功能。
 
-## 2. 頁面標題
-網頁標題應為 "Elaine's Workout"
+## 2. 前端介面 (Workout_Web2)
 
-## 3. 基本結構
-網頁應包含基本的 HTML5 結構，包括 `<!DOCTYPE html>`、`<html>`、`<head>` 和 `<body>` 標籤。
+### 2.1 描述
+Workout_Web2 是一個基於HTML的靜態網站，用於展示健身相關的內容，如身體部位鍛鍊、最佳訓練等。它包含多個頁面和圖像資源，提供使用者友善的瀏覽體驗。
 
-## 4. 字元編碼
-應設定為 UTF-8。
+### 2.2 主要檔案
+*   [`index.html`](index.html): 網站的首頁。
+*   [`workout.html`](workout.html): 展示特定健身計畫或鍛鍊的頁面。
+*   [`body.html`](body.html): 可能用於展示身體部位相關資訊的頁面。
+*   [`best.html`](best.html): 可能用於展示最佳訓練或推薦內容的頁面。
+*   [`card.png`](card.png), [`pic1.png`](pic1.png) - [`pic10.png`](pic1.png), [`workout.png`](workout.png): 網站中使用的圖像資源。
+*   [`task.md`](task.md): 專案相關任務或待辦事項文件。
 
-## 5. 響應式設計
-網頁應具備響應式設計，以適應不同裝置的螢幕大小。應在 `<head>` 中加入適當的 viewport meta 標籤。
+### 2.3 使用技術
+*   HTML
+*   CSS
 
-## 6. 樣式
-### 6.1 CSS 框架
-應使用 Tailwind CSS CDN。
+## 3. 後端API服務 (Workout_API)
 
-### 6.2 背景樣式
-背景圖為專案根目錄下的 `workout.png`。
-背景需覆蓋整個畫面 (`background-size: cover; background-position: center; background-attachment: fixed;`)。
-背景上應有白色半透明遮罩（透明度約 70%，例如 `rgba(255,255,255,0.7)`），並使用 `background-blend-mode: overlay;`。
+### 3.1 描述
+Workout_API 是一個基於Node.js的後端服務，提供前端介面所需的資料和業務邏輯。此服務透過標準HTTP協定進行通訊。
 
-## 7. 內容區塊
-### 7.1 Hero 區塊
-- 應包含一個主要標題 `<h1>`，例如 "Let's workout"，樣式為 `font-extrabold text-5xl md:text-7xl tracking-wide text-gray-900`。
-- 應包含一句激勵性副標題，例如 "Track your workouts, beat your best, and know your body."。
-- 應包含一個主行動按鈕 "Start now"，具有 `hover` 變深色效果。
+### 3.2 主要檔案
+*   [`index.js`](../Workout_API/index.js): API服務的入口點檔案，包含主要的路由和邏輯。
+*   [`package.json`](../Workout_API/package.json): 定義專案的元數據和所有Node.js依賴項。
+*   [`package-lock.json`](../Workout_API/package-lock.json): 記錄了安裝依賴項時的精確版本，確保團隊成員之間的一致性。
+*   [`Procfile`](../Workout_API/Procfile): (如果存在) 用於Heroku等平台部署時指定應用程式啟動命令。
 
-### 7.2 功能按鈕區塊
-- 應包含三個圓形功能按鈕，置中、等寬，`hover` 時有陰影和微放大 (`scale 105%`) 效果，過渡時間為 `200ms`。
-- 按鈕文字應為 "Workout Log"、"Personal Bests"、"Body Metrics"。
-- 按鈕應連結到 `#workout-log`、`#personal-bests`、`#body-metrics` 錨點。
+### 3.3 使用技術
+*   Node.js
+*   JavaScript
+*   npm (用於套件管理)
 
-### 7.3 介紹段落 (Card 風格)
-- 應包含至少三個區塊 `<div>`，用於展示不同的運動內容或資訊，例如 "Cardio Exercise"、"Strength Training" 和 "Body Metrics Tracking"。
-- 每個區塊應包含一個次要標題 `<h2>` 和一些段落文字 `<p>`。
-- 這些區塊應具有卡片風格，例如背景色為白色半透明 (`bg-black bg-opacity-50`)、圓角和柔和陰影。
-
-### 7.4 頁腳 (Footer)
-- 應包含一個 `<footer>` 標籤。
-- 頁腳中應包含版權資訊，例如 "© 2025 Elaine’s Workout"。
-
-## 8. 語義化 HTML 與可訪問性
-- 應使用語義化 HTML5 標籤 (例如 `<section>`, `<footer>`)。
-- 圖片應包含 `alt` 屬性。
-- 連結應有明確的文字描述。
-
-## 9. 排版與響應式設計
-- 所有內容（大標題、按鈕或連結）應置中顯示在畫面中央，容器樣式為 `flex flex-col items-center justify-center min-h-screen text-center`。
-- 網頁應相容手機（375px 起）到桌機（1440px），並確保背景完整、文字不被截斷。
-- 段落行高應為 1.7。
+## 4. 部署與運行
+*   前端與後端應獨立部署。
+*   前端網站可透過任何靜態網頁伺服器託管。
+*   後端API服務需要Node.js環境運行，並可能透過 `Procfile` 指定的命令啟動。
