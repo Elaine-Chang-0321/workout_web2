@@ -3,37 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Workout Webpage</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Elaine's Workout</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- 內嵌自定義 CSS (如果需要) -->
+    <style>
+        /* 自定義樣式 */
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 其他可能需要的自定義樣式，例如 for "Body Metrics" circle button text */
+    </style>
 </head>
-<body>
-    <header>
-        <h1>Welcome to My Workout Webpage</h1>
-    </header>
+<body class="font-inter bg-gray-50 text-gray-800">
+    <div class="container mx-auto px-4 max-w-screen-lg py-8 md:py-12">
 
-    <nav>
-        <ul>
-            <li><a href="#">Workout log</a></li>
-            <li><a href="#">Personal Bests</a></li>
-            <li><a href="#">Inbody</a></li>
-        </ul>
-    </nav>
+        <!-- Hero 區塊 -->
+        <section class="text-center my-16 md:my-24" id="hero">
+            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-4">Let's work out</h1>
+            <p class="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">Track your workouts, beat your best, and know your body.</p>
+            <a href="#" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-2xl shadow-md
+                              transition-all duration-200 ease-in-out hover:bg-blue-700 hover:scale-105">
+                Start now
+            </a>
+        </section>
 
-    <main>
-        <div>
-            <h2>Cardio Exercise</h2>
-            <p>Cardio exercise refers to any activity that gets your heart rate up and makes you breathe faster, such as running, swimming, or cycling. It helps improve cardiovascular function, burn fat, and boost mood.</p>
-        </div>
-        <div>
-            <h2>Strength Training</h2>
-            <p>Strength training involves increasing muscle strength and endurance through resistance, such as weightlifting, squats, and push-ups. It helps increase muscle mass, boost metabolism, and prevent osteoporosis.</p>
-        </div>
-    </main>
+        <!-- 三個圓形功能鈕 -->
+        <section class="my-16 md:my-24">
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
+                <!-- Workout Log -->
+                <a href="#workout-log" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
+                                            shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
+                    <span class="text-lg font-semibold text-gray-800">Workout Log</span>
+                </a>
+                <!-- Personal Bests -->
+                <a href="#personal-bests" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
+                                                shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
+                    <span class="text-lg font-semibold text-gray-800">Personal Bests</span>
+                </a>
+                <!-- Body Metrics -->
+                <a href="#body-metrics" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
+                                              shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
+                    <span class="text-lg font-semibold text-gray-800">Body Metrics</span>
+                </a>
+            </div>
+        </section>
 
-    <footer>
-        <p>© 2023 My Workout Webpage</p>
+        <!-- 兩個介紹段落 (Card 風格) -->
+        <section class="my-16 md:my-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Cardio Exercise Card -->
+                <div id="workout-log" class="bg-white p-8 rounded-2xl shadow-md">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Cardio Exercise</h2>
+                    <p class="text-gray-700 leading-relaxed">
+                        Engage in cardiovascular activities to boost your heart health and endurance. From running to cycling, track your progress and push your limits.
+                    </p>
+                </div>
+                <!-- Strength Training Card -->
+                <div id="personal-bests" class="bg-white p-8 rounded-2xl shadow-md">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Strength Training</h2>
+                    <p class="text-gray-700 leading-relaxed">
+                        Build muscle, increase strength, and transform your body with effective strength training routines. Monitor your lifts and celebrate new personal records.
+                    </p>
+                </div>
+            </div>
+            <!-- Body Metrics Card (假設第三個介紹段落) -->
+            <div id="body-metrics" class="bg-white p-8 rounded-2xl shadow-md mt-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Body Metrics Tracking</h2>
+                <p class="text-gray-700 leading-relaxed">
+                        Understand your body composition, track weight, body fat percentage, and other key metrics to see your fitness journey unfold.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- 頁腳 -->
+    <footer class="bg-gray-100 py-8 text-center text-gray-600 text-sm">
+        <p>© 2025 Elaine’s Workout</p>
     </footer>
-
-    <script src="script.js" defer></script>
 </body>
 </html>
