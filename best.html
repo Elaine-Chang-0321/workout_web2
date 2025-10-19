@@ -13,38 +13,6 @@
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
     .fun-font{font-family:'Baloo 2',cursive;}
   </style>
-<style>
-  /* Flip 基本設定 */
-  .flip { perspective: 1000px; }
-  .flip-inner {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform .6s;
-    border-radius: 1rem; /* 和原卡片圓角一致 */
-    overflow: hidden;
-  }
-  /* 加上 .is-flipped 時翻轉 */
-  .flip.is-flipped .flip-inner { transform: rotateY(180deg); }
-
-  .flip-front, .flip-back {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-  .flip-front {
-    position: relative;
-  }
-  .flip-back {
-    position: absolute;
-    inset: 0;
-    transform: rotateY(180deg);
-    display: flex;
-  }
-  .flip-back img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-</style>
 </head>
 <body class="bg-gray-50">
   <!-- Header -->
@@ -83,132 +51,105 @@
     <p id="emptyState" class="hidden text-center text-slate-400 mt-10">No data yet.</p>
   </main>
 
-<script>
-  const API_BASE = "https://workout-api.zeabur.app";
+  <script>
+    // 固定 API 網址
+    const API_BASE = "https://workout-api.zeabur.app";
 
-  const grid = document.getElementById("grid");
-  const emptyState = document.getElementById("emptyState");
-  const searchInput = document.getElementById("searchInput");
-  const sortSelect = document.getElementById("sortSelect");
+    const grid = document.getElementById("grid");
+    const emptyState = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
 
-  let rawData = [];
+    let rawData = [];
 
-  // ✅ 放在全域（不放在函式裡）
-  const PIC_COUNT = 10;
-  let lastPicIndex = -1;
-  function pickHeroImage() {
-    let idx;
-    do {
-      idx = Math.floor(Math.random() * PIC_COUNT);
-    } while (idx === lastPicIndex);
-    lastPicIndex = idx;
-    return `pic${idx + 1}.png`;
-  }
+    function fmtDate(d){
+      if(!d) return "";
+      try { return new Date(d).toISOString().slice(0,10); }
+      catch { return d || ""; }
+    }
 
-  function fmtDate(d){
-    if(!d) return "";
-    try { return new Date(d).toISOString().slice(0,10); }
-    catch { return d || ""; }
-  }
+function card(ex) {
+  // 隨機選一張 pic1~pic10 圖片
+  const randomPic = `pic${Math.floor(Math.random() * 10) + 1}.png`;
 
-  function card(ex, heroImg) {
-    return `
-      <div class="flip group cursor-pointer" role="button" tabindex="0" aria-pressed="false">
-        <div class="flip-inner bg-white shadow hover:shadow-lg transition">
-          <!-- Front -->
-          <div class="flip-front">
-            <article class="relative overflow-hidden">
-              <div class="h-36 bg-cover bg-center" style="background-image: url('${heroImg}');"></div>
-              <div class="p-5">
-                <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
-                <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
-                  ${ex.weight_kg ? Math.round(ex.weight_kg) : "-"}
-                  <span class="text-2xl font-bold text-slate-500"> kg</span>
-                </p>
-                <p class="text-sm text-slate-500">
-                  ${fmtDate(ex.date)}${ex.reps ? ` · ${r.reps} reps` : "" }
-                </p>
-                <div class="mt-4 flex gap-2">
-                  <a href="workout.html"
-                     class="inline-flex items-center px-3 py-1.5 text-sm rounded-full border border-slate-300 text-slate-700 hover:bg-slate-50">
-                     Log more
-                  </a>
-                  <a href="#" onclick="viewDetail('${encodeURIComponent(ex.exercise)}'); return false;"
-                     class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white hover:bg-black">
-                     View details
-                  </a>
-                </div>
-              </div>
-            </article>
-          </div>
-          <!-- Back -->
-          <div class="flip-back">
-            <img src="card.png" alt="card back">
-          </div>
+  return `
+    <article class="group relative rounded-2xl overflow-hidden bg-white shadow hover:shadow-lg transition">
+      <div class="h-36 bg-cover bg-center"
+           style="background-image: url('${randomPic}');"></div>
+      <div class="p-5">
+        <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
+        <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
+          ${ex.weight_kg ? Math.round(ex.weight_kg) : "-"}<span class="text-2xl font-bold text-slate-500"> kg</span>
+        </p>
+        <p class="text-sm text-slate-500">
+          ${fmtDate(ex.date)}${ex.reps ? ` · ${ex.reps} reps` : "" }
+        </p>
+        <div class="mt-4 flex gap-2">
+          <a href="workout.html"
+             class="inline-flex items-center px-3 py-1.5 text-sm rounded-full border border-slate-300 text-slate-700 hover:bg-slate-50">
+             Log more
+          </a>
+          <a href="#" onclick="viewDetail('${encodeURIComponent(ex.exercise)}'); return false;"
+             class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white hover:bg-black">
+             View details
+          </a>
         </div>
       </div>
-    `;
-  }
+    </article>
+  `;
+}
 
-  function render(list) {
-    lastPicIndex = -1;
-    grid.innerHTML = list.map(ex => card(ex, pickHeroImage())).join("");
-    emptyState.classList.toggle("hidden", list.length > 0);
-  }
-
-  function filterAndSort() {
-    let list = [...rawData];
-    const q = (searchInput.value || "").trim().toLowerCase();
-    if (q) list = list.filter(x => (x.exercise || "").toLowerCase().includes(q));
-
-    switch (sortSelect.value) {
-      case "weight_asc": list.sort((a,b)=>(a.weight_kg??0)-(b.weight_kg??0)); break;
-      case "alpha_asc": list.sort((a,b)=>String(a.exercise).localeCompare(String(b.exercise))); break;
-      case "alpha_desc": list.sort((a,b)=>String(b.exercise).localeCompare(String(a.exercise))); break;
-      case "date_asc": list.sort((a,b)=>new Date(a.date)-new Date(b.date)); break;
-      case "date_desc": list.sort((a,b)=>new Date(b.date)-new Date(a.date)); break;
-      default: list.sort((a,b)=>(b.weight_kg??0)-(a.weight_kg??0));
+    function render(list) {
+      grid.innerHTML = list.map(card).join("");
+      emptyState.classList.toggle("hidden", list.length > 0);
     }
-    render(list);
-  }
 
-  async function load() {
-    grid.innerHTML = `<div class="col-span-full text-center text-slate-400">Loading...</div>`;
-    try {
-      const r = await fetch(`${API_BASE}/api/bests`);
-      if(!r.ok) throw new Error(await r.text());
-      rawData = await r.json();
-    } catch (e) {
-      grid.innerHTML = `<div class="col-span-full text-center text-red-600">⚠️ Failed to load API.<br>${e.message}</div>`;
-      rawData = [];
+    function filterAndSort() {
+      let list = [...rawData];
+      const q = (searchInput.value || "").trim().toLowerCase();
+      if (q) list = list.filter(x => (x.exercise || "").toLowerCase().includes(q));
+
+      switch (sortSelect.value) {
+        case "weight_asc":  list.sort((a,b)=>(a.weight_kg??0)-(b.weight_kg??0)); break;
+        case "alpha_asc":   list.sort((a,b)=>String(a.exercise).localeCompare(String(b.exercise))); break;
+        case "alpha_desc":  list.sort((a,b)=>String(b.exercise).localeCompare(String(a.exercise))); break;
+        case "date_asc":    list.sort((a,b)=>new Date(a.date)-new Date(b.date)); break;
+        case "date_desc":   list.sort((a,b)=>new Date(b.date)-new Date(a.date)); break;
+        default:            list.sort((a,b)=>(b.weight_kg??0)-(a.weight_kg??0));
+      }
+      render(list);
     }
-    filterAndSort();
-  }
 
-  async function viewDetail(name){
-    try {
-      const r = await fetch(`${API_BASE}/api/bests/${name}`);
-      if(!r.ok) throw new Error(await r.text());
-      const rows = await r.json();
-      alert(`${decodeURIComponent(name)}\n` +
-        rows.map(r => `${fmtDate(r.date)} - ${r.weight_kg}kg x ${r.reps ?? '-'}`).join('\n')
-      );
-    } catch (e) {
-      alert(`Failed: ${e.message}`);
+    async function load() {
+      grid.innerHTML = `<div class="col-span-full text-center text-slate-400">Loading...</div>`;
+      try {
+        const r = await fetch(`${API_BASE}/api/bests`);
+        if(!r.ok) throw new Error(await r.text());
+        rawData = await r.json();
+      } catch (e) {
+        grid.innerHTML = `<div class="col-span-full text-center text-red-600">Failed to load: ${e.message}</div>`;
+        return;
+      }
+      filterAndSort();
     }
-  }
 
-  searchInput.addEventListener("input", filterAndSort);
-  sortSelect.addEventListener("change", filterAndSort);
-  load();
+    // 彈窗顯示單一動作明細（可後續改成獨立頁面）
+    async function viewDetail(name){
+      try {
+        const r = await fetch(`${API_BASE}/api/bests/${name}`);
+        if(!r.ok) throw new Error(await r.text());
+        const rows = await r.json();
+        alert(`${decodeURIComponent(name)}\n` +
+          rows.map(r => `${fmtDate(r.date)} - ${r.weight_kg}kg x ${r.reps ?? '-'}`).join('\n')
+        );
+      } catch (e) {
+        alert(`Failed: ${e.message}`);
+      }
+    }
 
-  // 翻面事件
-  grid.addEventListener("click", (e) => {
-    if (e.target.closest("a")) return;
-    const host = e.target.closest(".flip");
-    if (!host) return;
-    host.classList.toggle("is-flipped");
-  });
-</script>
+    searchInput.addEventListener("input", filterAndSort);
+    sortSelect.addEventListener("change", filterAndSort);
+    load();
+  </script>
 </body>
 </html>
