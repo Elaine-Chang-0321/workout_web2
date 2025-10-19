@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Bests</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}</style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="w-full bg-white shadow-sm py-4 px-6 md:px-12 flex items-center justify-between">
+    <div class="text-2xl md:text-3xl font-extrabold text-slate-800 select-none">Personal Bests</div>
+    <nav class="flex items-center gap-3">
+      <a href="index.html"
+         class="bg-slate-900 text-white font-semibold px-5 py-2 rounded-full hover:bg-black transition">
+        Home
+      </a>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12">
+    <!-- Toolbar -->
+    <section class="mb-6 flex flex-col md:flex-row md:items-center gap-3">
+      <input id="searchInput" type="search" placeholder="Search exercise..."
+             class="w-full md:w-80 h-11 rounded-xl border border-slate-200 px-4 focus:outline-none focus:ring-4 focus:ring-indigo-200"/>
+      <select id="sortSelect"
+              class="h-11 rounded-xl border border-slate-200 px-3 focus:outline-none focus:ring-4 focus:ring-indigo-200">
+        <option value="weight_desc">Sort: Weight (High → Low)</option>
+        <option value="weight_asc">Sort: Weight (Low → High)</option>
+        <option value="alpha_asc">Sort: A → Z</option>
+        <option value="alpha_desc">Sort: Z → A</option>
+        <option value="date_desc">Sort: Newest</option>
+        <option value="date_asc">Sort: Oldest</option>
+      </select>
+    </section>
+
+    <!-- Cards grid -->
+    <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- JS inject -->
+    </section>
+
+    <!-- Empty -->
+    <p id="emptyState" class="hidden text-center text-slate-400 mt-10">No data yet.</p>
+  </main>
+
+  <script>
+    // 固定 API 網址
+    const API_BASE = "https://workout-api.zeabur.app";
+
+    const grid = document.getElementById("grid");
+    const emptyState = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+
+    let rawData = [];
+
+    function fmtDate(d){
+      if(!d) return "";
+      try { return new Date(d).toISOString().slice(0,10); }
+      catch { return d || ""; }
+    }
+
+    function card(ex) {
+      const gradient = [
+        "from-rose-400 to-orange-300",
+        "from-indigo-400 to-cyan-300",
+        "from-emerald-400 to-lime-300",
+        "from-fuchsia-400 to-pink-300",
+        "from-sky-400 to-blue-300",
+        "from-amber-400 to-yellow-300"
+      ][Math.floor(Math.random()*6)];
+
+      return `
+        <article class="group relative rounded-2xl overflow-hidden bg-white shadow hover:shadow-lg transition">
+          <div class="h-36 bg-gradient-to-br ${gradient}"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
+            <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
+              ${ex.weight_kg ?? "-"}<span class="text-2xl font-bold text-slate-500"> kg</span>
+            </p>
+            <p class="text-sm text-slate-500">
+              ${fmtDate(ex.date)}${ex.reps ? ` · ${ex.reps} reps` : "" }
+            </p>
+            <div class="mt-4 flex gap-2">
+              <a href="workout.html"
+                 class="inline-flex items-center px-3 py-1.5 text-sm rounded-full border border-slate-300 text-slate-700 hover:bg-slate-50">
+                 Log more
+              </a>
+              <a href="#" onclick="viewDetail('${encodeURIComponent(ex.exercise)}'); return false;"
+                 class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white hover:bg-black">
+                 View details
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function render(list) {
+      grid.innerHTML = list.map(card).join("");
+      emptyState.classList.toggle("hidden", list.length > 0);
+    }
+
+    function filterAndSort() {
+      let list = [...rawData];
+      const q = (searchInput.value || "").trim().toLowerCase();
+      if (q) list = list.filter(x => (x.exercise || "").toLowerCase().includes(q));
+
+      switch (sortSelect.value) {
+        case "weight_asc":  list.sort((a,b)=>(a.weight_kg??0)-(b.weight_kg??0)); break;
+        case "alpha_asc":   list.sort((a,b)=>String(a.exercise).localeCompare(String(b.exercise))); break;
+        case "alpha_desc":  list.sort((a,b)=>String(b.exercise).localeCompare(String(a.exercise))); break;
+        case "date_asc":    list.sort((a,b)=>new Date(a.date)-new Date(b.date)); break;
+        case "date_desc":   list.sort((a,b)=>new Date(b.date)-new Date(a.date)); break;
+        default:            list.sort((a,b)=>(b.weight_kg??0)-(a.weight_kg??0));
+      }
+      render(list);
+    }
+
+    async function load() {
+      grid.innerHTML = `<div class="col-span-full text-center text-slate-400">Loading...</div>`;
+      try {
+        const r = await fetch(`${API_BASE}/api/bests`);
+        if(!r.ok) throw new Error(await r.text());
+        rawData = await r.json();
+      } catch (e) {
+        grid.innerHTML = `<div class="col-span-full text-center text-red-600">Failed to load: ${e.message}</div>`;
+        return;
+      }
+      filterAndSort();
+    }
+
+    // 彈窗顯示單一動作明細（可後續改成獨立頁面）
+    async function viewDetail(name){
+      try {
+        const r = await fetch(`${API_BASE}/api/bests/${name}`);
+        if(!r.ok) throw new Error(await r.text());
+        const rows = await r.json();
+        alert(`${decodeURIComponent(name)}\n` +
+          rows.map(r => `${fmtDate(r.date)} - ${r.weight_kg}kg x ${r.reps ?? '-'}`).join('\n')
+        );
+      } catch (e) {
+        alert(`Failed: ${e.message}`);
+      }
+    }
+
+    searchInput.addEventListener("input", filterAndSort);
+    sortSelect.addEventListener("change", filterAndSort);
+    load();
+  </script>
+</body>
+</html>
