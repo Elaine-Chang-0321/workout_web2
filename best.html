@@ -6,38 +6,45 @@
   <title>Personal Bests</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
   <style>
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
     .fun-font{font-family:'Baloo 2',cursive;}
-
-    /* 卡片翻面效果 */
-    .flip-card {
-      perspective: 1000px;
-      cursor: pointer;
-    }
-    .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-    }
-    .flip-card.flipped .flip-card-inner {
-      transform: rotateY(180deg);
-    }
-    .flip-card-front, .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 1rem;
-      overflow: hidden;
-    }
-    .flip-card-back {
-      transform: rotateY(180deg);
-    }
   </style>
+<style>
+  /* Flip 基本設定 */
+  .flip { perspective: 1000px; }
+  .flip-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform .6s;
+    border-radius: 1rem; /* 和原卡片圓角一致 */
+    overflow: hidden;
+  }
+  /* 加上 .is-flipped 時翻轉 */
+  .flip.is-flipped .flip-inner { transform: rotateY(180deg); }
+
+  .flip-front, .flip-back {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-front {
+    position: relative;
+  }
+  .flip-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+    display: flex;
+  }
+  .flip-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
 </head>
 <body class="bg-gray-50">
   <!-- Header -->
@@ -52,6 +59,7 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12">
+    <!-- Toolbar -->
     <section class="mb-6 flex flex-col md:flex-row md:items-center gap-3">
       <input id="searchInput" type="search" placeholder="Search exercise..."
              class="w-full md:w-80 h-11 rounded-xl border border-slate-200 px-4 focus:outline-none focus:ring-4 focus:ring-indigo-200"/>
@@ -67,12 +75,18 @@
     </section>
 
     <!-- Cards grid -->
-    <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></section>
+    <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- JS inject -->
+    </section>
+
+    <!-- Empty -->
     <p id="emptyState" class="hidden text-center text-slate-400 mt-10">No data yet.</p>
   </main>
 
   <script>
+    // 固定 API 網址
     const API_BASE = "https://workout-api.zeabur.app";
+
     const grid = document.getElementById("grid");
     const emptyState = document.getElementById("emptyState");
     const searchInput = document.getElementById("searchInput");
@@ -86,39 +100,49 @@
       catch { return d || ""; }
     }
 
-    function card(ex) {
-      const randomPic = `pic${Math.floor(Math.random() * 10) + 1}.png`;
-      const front = `
-        <div class="flip-card-front bg-white shadow">
-          <div class="h-36 bg-cover bg-center" style="background-image: url('${randomPic}');"></div>
-          <div class="p-5">
-            <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
-            <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
-              ${ex.weight_kg ? Math.round(ex.weight_kg) : "-"}<span class="text-2xl font-bold text-slate-500"> kg</span>
-            </p>
-            <p class="text-sm text-slate-500">
-              ${fmtDate(ex.date)}${ex.reps ? ` · ${ex.reps} reps` : "" }
-            </p>
-          </div>
-        </div>
-      `;
+function card(ex) {
+  // 隨機選一張 pic1~pic10 當卡片上方頭圖（正面）
+  const randomPic = `pic${Math.floor(Math.random() * 10) + 1}.png`;
 
-      const back = `
-        <div class="flip-card-back bg-slate-900 text-white flex flex-col justify-center items-center p-6">
-          <p class="text-lg font-semibold mb-3">${ex.exercise}</p>
-          <p class="text-sm opacity-80 mb-4">${fmtDate(ex.date)}<br>${ex.reps ?? "-"} reps</p>
-          <a href="workout.html" class="bg-white text-slate-900 px-4 py-2 rounded-full font-semibold hover:bg-gray-100">
-            Log more
-          </a>
-        </div>
-      `;
+  return `
+    <div class="flip group cursor-pointer" role="button" tabindex="0" aria-pressed="false">
+      <div class="flip-inner bg-white shadow hover:shadow-lg transition">
 
-      return `
-        <article class="flip-card rounded-2xl" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">${front}${back}</div>
-        </article>
-      `;
-    }
+        <!-- Front：原本的卡片內容 -->
+        <div class="flip-front">
+          <article class="relative overflow-hidden">
+            <div class="h-36 bg-cover bg-center" style="background-image: url('${randomPic}');"></div>
+            <div class="p-5">
+              <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
+              <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
+                ${ex.weight_kg ? Math.round(ex.weight_kg) : "-"}<span class="text-2xl font-bold text-slate-500"> kg</span>
+              </p>
+              <p class="text-sm text-slate-500">
+                ${fmtDate(ex.date)}${ex.reps ? ` · ${ex.reps} reps` : "" }
+              </p>
+              <div class="mt-4 flex gap-2">
+                <a href="workout.html"
+                   class="inline-flex items-center px-3 py-1.5 text-sm rounded-full border border-slate-300 text-slate-700 hover:bg-slate-50">
+                   Log more
+                </a>
+                <a href="#" onclick="viewDetail('${encodeURIComponent(ex.exercise)}'); return false;"
+                   class="inline-flex items-center px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white hover:bg-black">
+                   View details
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Back：整張覆蓋 card.png -->
+        <div class="flip-back">
+          <img src="card.png" alt="card back">
+        </div>
+
+      </div>
+    </div>
+  `;
+}
 
     function render(list) {
       grid.innerHTML = list.map(card).join("");
@@ -129,6 +153,7 @@
       let list = [...rawData];
       const q = (searchInput.value || "").trim().toLowerCase();
       if (q) list = list.filter(x => (x.exercise || "").toLowerCase().includes(q));
+
       switch (sortSelect.value) {
         case "weight_asc":  list.sort((a,b)=>(a.weight_kg??0)-(b.weight_kg??0)); break;
         case "alpha_asc":   list.sort((a,b)=>String(a.exercise).localeCompare(String(b.exercise))); break;
@@ -153,9 +178,42 @@
       filterAndSort();
     }
 
+    // 彈窗顯示單一動作明細（可後續改成獨立頁面）
+    async function viewDetail(name){
+      try {
+        const r = await fetch(`${API_BASE}/api/bests/${name}`);
+        if(!r.ok) throw new Error(await r.text());
+        const rows = await r.json();
+        alert(`${decodeURIComponent(name)}\n` +
+          rows.map(r => `${fmtDate(r.date)} - ${r.weight_kg}kg x ${r.reps ?? '-'}`).join('\n')
+        );
+      } catch (e) {
+        alert(`Failed: ${e.message}`);
+      }
+    }
+
     searchInput.addEventListener("input", filterAndSort);
     sortSelect.addEventListener("change", filterAndSort);
     load();
+
+    // 點擊卡片本體翻面（點擊連結則不翻）
+    grid.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return; // 點到連結就不要翻
+      const host = e.target.closest(".flip");
+      if (!host) return;
+      host.classList.toggle("is-flipped");
+      host.setAttribute("aria-pressed", host.classList.contains("is-flipped") ? "true" : "false");
+    });
+
+    // 鍵盤可達性：Enter 或 Space 翻面
+    grid.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const host = e.target.closest(".flip");
+      if (!host) return;
+      e.preventDefault();
+      host.classList.toggle("is-flipped");
+      host.setAttribute("aria-pressed", host.classList.contains("is-flipped") ? "true" : "false");
+    });
   </script>
 </body>
 </html>
