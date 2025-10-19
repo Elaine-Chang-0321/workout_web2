@@ -13,78 +13,86 @@
     <!-- 內嵌自定義 CSS (如果需要) -->
     <style>
         /* 自定義樣式 */
+        body {
+            background-image: url('workout.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center; /* 確保背景圖片置中 */
+        }
         .font-inter {
             font-family: 'Inter', sans-serif;
         }
         /* 其他可能需要的自定義樣式，例如 for "Body Metrics" circle button text */
     </style>
 </head>
-<body class="font-inter bg-gray-50 text-gray-800">
-    <div class="container mx-auto px-4 max-w-screen-lg py-8 md:py-12">
+<body class="font-inter">
+    <div class="bg-black bg-opacity-50 fixed inset-0 flex flex-col items-center justify-center overflow-auto p-4">
+        <div class="container mx-auto max-w-screen-lg py-8 md:py-12 text-white">
 
-        <!-- Hero 區塊 -->
-        <section class="text-center my-16 md:my-24" id="hero">
-            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-4">Let's work out</h1>
-            <p class="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">Track your workouts, beat your best, and know your body.</p>
-            <a href="#" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-2xl shadow-md
-                              transition-all duration-200 ease-in-out hover:bg-blue-700 hover:scale-105">
-                Start now
-            </a>
-        </section>
-
-        <!-- 三個圓形功能鈕 -->
-        <section class="my-16 md:my-24">
-            <div class="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
-                <!-- Workout Log -->
-                <a href="#workout-log" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
-                                            shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
-                    <span class="text-lg font-semibold text-gray-800">Workout Log</span>
+            <!-- Hero 區塊 -->
+            <section class="text-center my-16 md:my-24" id="hero">
+                <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">Let's work out</h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">Track your workouts, beat your best, and know your body.</p>
+                <a href="#" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-2xl shadow-md
+                                   transition-all duration-200 ease-in-out hover:bg-blue-700 hover:scale-105">
+                    Start now
                 </a>
-                <!-- Personal Bests -->
-                <a href="#personal-bests" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
+            </section>
+
+            <!-- 三個圓形功能鈕 -->
+            <section class="my-16 md:my-24">
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
+                    <!-- Workout Log -->
+                    <a href="#workout-log" class="circle-btn bg-black bg-opacity-50 w-40 h-40 rounded-full flex items-center justify-center text-center
                                                 shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
-                    <span class="text-lg font-semibold text-gray-800">Personal Bests</span>
-                </a>
-                <!-- Body Metrics -->
-                <a href="#body-metrics" class="circle-btn bg-white w-40 h-40 rounded-full flex items-center justify-center text-center
-                                              shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
-                    <span class="text-lg font-semibold text-gray-800">Body Metrics</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- 兩個介紹段落 (Card 風格) -->
-        <section class="my-16 md:my-24">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Cardio Exercise Card -->
-                <div id="workout-log" class="bg-white p-8 rounded-2xl shadow-md">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Cardio Exercise</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        Engage in cardiovascular activities to boost your heart health and endurance. From running to cycling, track your progress and push your limits.
-                    </p>
+                        <span class="text-lg font-semibold text-white">Workout Log</span>
+                    </a>
+                    <!-- Personal Bests -->
+                    <a href="#personal-bests" class="circle-btn bg-black bg-opacity-50 w-40 h-40 rounded-full flex items-center justify-center text-center
+                                                    shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
+                        <span class="text-lg font-semibold text-white">Personal Bests</span>
+                    </a>
+                    <!-- Body Metrics -->
+                    <a href="#body-metrics" class="circle-btn bg-black bg-opacity-50 w-40 h-40 rounded-full flex items-center justify-center text-center
+                                                  shadow-md transition-all duration-200 ease-in-out hover:shadow-xl hover:scale-105">
+                        <span class="text-lg font-semibold text-white">Body Metrics</span>
+                    </a>
                 </div>
-                <!-- Strength Training Card -->
-                <div id="personal-bests" class="bg-white p-8 rounded-2xl shadow-md">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Strength Training</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        Build muscle, increase strength, and transform your body with effective strength training routines. Monitor your lifts and celebrate new personal records.
-                    </p>
-                </div>
-            </div>
-            <!-- Body Metrics Card (假設第三個介紹段落) -->
-            <div id="body-metrics" class="bg-white p-8 rounded-2xl shadow-md mt-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Body Metrics Tracking</h2>
-                <p class="text-gray-700 leading-relaxed">
-                        Understand your body composition, track weight, body fat percentage, and other key metrics to see your fitness journey unfold.
-                </p>
-            </div>
-        </section>
+            </section>
 
+            <!-- 兩個介紹段落 (Card 風格) -->
+            <section class="my-16 md:my-24">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Cardio Exercise Card -->
+                    <div id="workout-log" class="bg-black bg-opacity-50 p-8 rounded-2xl shadow-md">
+                        <h2 class="text-2xl font-bold text-white mb-4">Cardio Exercise</h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            Engage in cardiovascular activities to boost your heart health and endurance. From running to cycling, track your progress and push your limits.
+                        </p>
+                    </div>
+                    <!-- Strength Training Card -->
+                    <div id="personal-bests" class="bg-black bg-opacity-50 p-8 rounded-2xl shadow-md">
+                        <h2 class="text-2xl font-bold text-white mb-4">Strength Training</h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            Build muscle, increase strength, and transform your body with effective strength training routines. Monitor your lifts and celebrate new personal records.
+                        </p>
+                    </div>
+                </div>
+                <!-- Body Metrics Card (假設第三個介紹段落) -->
+                <div id="body-metrics" class="bg-black bg-opacity-50 p-8 rounded-2xl shadow-md mt-8">
+                        <h2 class="text-2xl font-bold text-white mb-4">Body Metrics Tracking</h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            Understand your body composition, track weight, body fat percentage, and other key metrics to see your fitness journey unfold.
+                        </p>
+                    </div>
+            </section>
+
+        </div>
+
+        <!-- 頁腳 -->
+        <footer class="py-8 text-center text-gray-300 text-sm">
+            <p>© 2025 Elaine’s Workout</p>
+        </footer>
     </div>
-
-    <!-- 頁腳 -->
-    <footer class="bg-gray-100 py-8 text-center text-gray-600 text-sm">
-        <p>© 2025 Elaine’s Workout</p>
-    </footer>
 </body>
 </html>
