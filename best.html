@@ -100,10 +100,7 @@
       catch { return d || ""; }
     }
 
-function card(ex) {
-  // 隨機選一張 pic1~pic10 當卡片上方頭圖（正面）
-  const randomPic = `pic${Math.floor(Math.random() * 10) + 1}.png`;
-
+function card(ex, heroImg) {
   return `
     <div class="flip group cursor-pointer" role="button" tabindex="0" aria-pressed="false">
       <div class="flip-inner bg-white shadow hover:shadow-lg transition">
@@ -111,7 +108,8 @@ function card(ex) {
         <!-- Front：原本的卡片內容 -->
         <div class="flip-front">
           <article class="relative overflow-hidden">
-            <div class="h-36 bg-cover bg-center" style="background-image: url('${randomPic}');"></div>
+            <!-- 正面上方：使用傳入的 heroImg -->
+            <div class="h-36 bg-cover bg-center" style="background-image: url('${heroImg}');"></div>
             <div class="p-5">
               <h3 class="text-xl font-extrabold text-slate-800 mb-1">${ex.exercise}</h3>
               <p class="text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
@@ -144,13 +142,34 @@ function card(ex) {
   `;
 }
 
-    function render(list) {
-      grid.innerHTML = list.map(card).join("");
-      emptyState.classList.toggle("hidden", list.length > 0);
-    }
+function render(list) {
+  // 每次渲染前重置，讓這一輪的相鄰卡片不重複
+  lastPicIndex = -1;
+
+  const html = list.map(ex => {
+    const hero = pickHeroImage(); // 取得本張的頭圖
+    return card(ex, hero);
+  }).join("");
+
+  grid.innerHTML = html;
+  emptyState.classList.toggle("hidden", list.length > 0);
+}
 
     function filterAndSort() {
       let list = [...rawData];
+    // 圖片池與「上一次使用的索引」；會確保相鄰不重複
+    const PIC_COUNT = 10;
+    let lastPicIndex = -1;
+
+    // 回傳 pic1.png ~ pic10.png，且不會與上一張相同
+    function pickHeroImage() {
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * PIC_COUNT); // 0 ~ 9
+      } while (idx === lastPicIndex);
+      lastPicIndex = idx;
+      return `pic${idx + 1}.png`;
+    }
       const q = (searchInput.value || "").trim().toLowerCase();
       if (q) list = list.filter(x => (x.exercise || "").toLowerCase().includes(q));
 
