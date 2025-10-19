@@ -7,13 +7,12 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}</style>
     <style>
         body {
             background-image: url('workout.png');
-            background-color: rgba(255,255,255,0.7); /* 白色半透明遮罩 */
             background-size: cover;
             background-attachment: fixed;
             background-position: center; /* 確保背景圖片置中 */
@@ -49,47 +48,59 @@
                 display: none;
             }
         }
+        input:invalid {
+            border-color: #DC2626 !important;
+            box-shadow: 0 0 0 4px rgba(252, 165, 165, 0.4) !important;
+        }
     </style>
 </head>
-<body class="font-inter bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="container mx-auto p-4 max-w-4xl">
-        <h1 class="text-4xl font-bold text-center mb-8 text-white">Workout Log</h1>
-
+<body class="font-inter bg-gray-100">
+    <div class="relative">
+        <div class="absolute inset-0 bg-white/70 -z-10"></div>
+        <div class="max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
         <!-- Workout Input Form -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <form id="workoutForm" class="space-y-4">
-                <div>
-                    <label for="workoutDate" class="block text-sm font-medium text-gray-700">Date:</label>
-                    <input type="date" id="workoutDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        <section class="bg-[#FFF4B8] rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-[#EADFA8] p-6 md:p-10">
+            <header class="mb-6 md:mb-8">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#1F2A37]">Workout Log</h1>
+            </header>
+            <form id="workoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                <div class="flex flex-col gap-2">
+                    <label for="workoutDate" class="text-sm font-semibold text-[#1F2A37]">Date:</label>
+                    <input type="date" id="workoutDate" required class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+                    <p id="workoutDateError" class="text-xs text-[#DC2626] mt-1"></p>
                 </div>
-                <div>
-                    <label for="exerciseName" class="block text-sm font-medium text-gray-700">Exercise:</label>
-                    <input type="text" id="exerciseName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <div class="flex flex-col gap-2">
+                    <label for="exerciseName" class="text-sm font-semibold text-[#1F2A37]">Exercise:</label>
+                    <input type="text" id="exerciseName" required class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+                    <p id="exerciseNameError" class="text-xs text-[#DC2626] mt-1"></p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="weightKg" class="block text-sm font-medium text-gray-700">Weight (kg):</label>
-                        <input type="number" id="weightKg" required min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <div class="flex flex-col gap-2">
+                        <label for="weightKg" class="text-sm font-semibold text-[#1F2A37]">Weight (kg):</label>
+                        <input type="number" id="weightKg" required min="1" class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+                        <p id="weightKgError" class="text-xs text-[#DC2626] mt-1"></p>
                     </div>
-                    <div>
-                        <label for="reps" class="block text-sm font-medium text-gray-700">Reps:</label>
-                        <input type="number" id="reps" required min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <div class="flex flex-col gap-2">
+                        <label for="reps" class="text-sm font-semibold text-[#1F2A37]">Reps:</label>
+                        <input type="number" id="reps" required min="1" class="h-12 rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition">
+                        <p id="repsError" class="text-xs text-[#DC2626] mt-1"></p>
                     </div>
+                <div class="flex flex-col gap-2 md:col-span-2">
+                    <label for="note" class="text-sm font-semibold text-[#1F2A37]">備註 Note:</label>
+                    <textarea id="note" rows="3" placeholder="optional" class="min-h-[120px] rounded-2xl border border-[#E2E8F0] bg-white/90 px-4 py-3 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#90A8FF]/40 focus:border-[#90A8FF] transition"></textarea>
+                    <p id="noteError" class="text-xs text-[#DC2626] mt-1"></p>
                 </div>
-                <div>
-                    <label for="note" class="block text-sm font-medium text-gray-700">備註 Note:</label>
-                    <textarea id="note" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Save Workout</button>
+                <button type="submit" class="w-full h-12 md:h-14 rounded-full bg-[#0F2E29] text-white text-base md:text-lg font-semibold tracking-wide shadow-[0_8px_20px_rgba(15,46,41,0.25)] hover:bg-[#0B241F] active:scale-[0.99] transition">Save Workout</button>
             </form>
-        </div>
-
+        </section>
+ 
         <!-- Action Buttons -->
-        <div class="flex justify-between mb-8 space-x-4">
-            <button id="clearAllBtn" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">Clear All</button>
-            <button id="exportJsonBtn" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Export JSON</button>
-            <input type="file" id="importJsonInput" accept=".json" class="hidden">
-            <button id="importJsonBtn" class="flex-1 bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">Import JSON</button>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <button id="clearAllBtn" class="h-10 rounded-full bg-[#DC2626] text-white font-semibold hover:bg-[#B91C1C] transition">Clear All</button>
+            <button id="exportJsonBtn" class="h-10 rounded-full border border-[#0F766E] text-[#0F766E] font-semibold hover:bg-[#0F766E]/10 transition">Export JSON</button>
+            <label class="h-10 rounded-full border border-[#A16207] text-[#A16207] font-semibold hover:bg-[#A16207]/10 transition grid place-items-center cursor-pointer">
+              Import JSON
+              <input id="importJsonInput" type="file" accept="application/json" class="hidden" />
+            </label>
         </div>
 
         <!-- Workout Records Table -->
@@ -115,6 +126,7 @@
         </div>
     </div>
 
+    </div>
     <script>
         // JavaScript will be embedded here
         const workoutForm = document.getElementById('workoutForm');
@@ -126,7 +138,6 @@
         const workoutTableBody = document.getElementById('workoutTableBody');
         const clearAllBtn = document.getElementById('clearAllBtn');
         const exportJsonBtn = document.getElementById('exportJsonBtn');
-        const importJsonBtn = document.getElementById('importJsonBtn');
         const importJsonInput = document.getElementById('importJsonInput');
 
         // Initial data structure for localStorage
@@ -204,7 +215,7 @@
                             <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Exercise">${exercise.exerciseName}</td>
                             <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Weight (kg)">${set.weightKg}</td>
                             <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Reps">${set.reps}</td>
-                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Note">${store.workouts.find(w => w.id === workoutId)?.note || ''}</td>
+                            <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Note">${set.note || ''}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-cell" data-label="Actions">
                                 <button data-id="${set.id}" data-type="edit" class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
                                 <button data-id="${set.id}" data-type="delete" class="text-red-600 hover:text-red-900">Delete</button>
@@ -238,9 +249,6 @@
                 store.workouts.push(workout);
             }
             // Update note if provided
-            if (note) {
-                workout.note = note;
-            }
 
             // Find or create exercise
             let exercise = store.exercises.find(ex => ex.name.toLowerCase() === exerciseName.toLowerCase());
@@ -256,6 +264,7 @@
                 exerciseId: exercise.id,
                 weightKg,
                 reps,
+                note: note,
                 createdAt: new Date().toISOString()
             };
             store.sets.push(setRecord);
@@ -306,9 +315,6 @@
         });
 
         // Import JSON
-        importJsonBtn.addEventListener('click', () => {
-            importJsonInput.click(); // Trigger file input click
-        });
 
         importJsonInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
