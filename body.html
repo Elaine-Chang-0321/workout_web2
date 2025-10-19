@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Metrics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(to bottom right, #B6D3DF, #90B9C9); /* 主背景漸層 */
+        }
+        /* For mobile, table will stack as cards */
+        @media (max-width: 768px) {
+            .table-responsive .table-row {
+                display: block;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                border: 1px solid #e2e8f0; /* Tailwind gray-200 */
+                border-radius: 0.5rem; /* Tailwind rounded-lg */
+            }
+            .table-responsive .table-cell {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #e2e8f0; /* Tailwind gray-200 */
+            }
+            .table-responsive .table-cell:last-child {
+                border-bottom: none;
+            }
+            .table-responsive .table-cell::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 0.5rem;
+            }
+            .table-responsive thead {
+                display: none;
+            }
+        }
+        input:invalid {
+            border-color: #DC2626 !important;
+            box-shadow: 0 0 0 4px rgba(252, 165, 165, 0.4) !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <section class="relative">
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-[70vh]">
+            <!-- 左背景 -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-[url('workout.png')] bg-cover bg-center"></div>
+                <div class="absolute inset-0 bg-[#B6D3DF]/40"></div>
+            </div>
+
+            <!-- 右表單卡片 -->
+            <div class="relative flex items-center justify-end px-4 md:px-8 py-10">
+                <div class="bg-white rounded-[20px] border border-[#E5E7EB] shadow-[0_12px_30px_rgba(0,0,0,0.12)] p-6 md:p-8 max-w-xl w-full">
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#1F2A37] mb-4">Body Metrics</h2>
+                    <form id="bodyMetricsForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                        <div class="flex flex-col gap-2">
+                            <label for="date" class="text-sm font-semibold text-[#1F2A37]">Date:</label>
+                            <input type="date" id="date" required
+                                   class="h-12 rounded-2xl border border-[#E5E7F0] bg-white/95 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#9CC7D6]/50 focus:border-[#8AB7C7] transition" />
+                            <p id="dateError" class="text-xs text-[#DC2626] mt-1"></p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="weightKg" class="text-sm font-semibold text-[#1F2A37]">Weight (kg):</label>
+                            <input type="number" id="weightKg" step="0.1" min="1" required
+                                   class="h-12 rounded-2xl border border-[#E5E7F0] bg-white/95 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#9CC7D6]/50 focus:border-[#8AB7C7] transition" />
+                            <p id="weightKgError" class="text-xs text-[#DC2626] mt-1"></p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="bodyFatPct" class="text-sm font-semibold text-[#1F2A37]">Body Fat (%):</label>
+                            <input type="number" id="bodyFatPct" step="0.1" min="1" max="75" required
+                                   class="h-12 rounded-2xl border border-[#E5E7F0] bg-white/95 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#9CC7D6]/50 focus:border-[#8AB7C7] transition" />
+                            <p id="bodyFatPctError" class="text-xs text-[#DC2626] mt-1"></p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="visceralFat" class="text-sm font-semibold text-[#1F2A37]">Visceral Fat:</label>
+                            <input type="number" id="visceralFat" step="0.1" min="1" required
+                                   class="h-12 rounded-2xl border border-[#E5E7F0] bg-white/95 px-4 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#9CC7D6]/50 focus:border-[#8AB7C7] transition" />
+                            <p id="visceralFatError" class="text-xs text-[#DC2626] mt-1"></p>
+                        </div>
+                        <div class="flex flex-col gap-2 md:col-span-2">
+                            <label for="note" class="text-sm font-semibold text-[#1F2A37]">Note:</label>
+                            <textarea id="note" placeholder="optional"
+                                      class="min-h-[120px] rounded-2xl border border-[#E5E7F0] bg-white/95 px-4 py-3 text-[#111827] placeholder:text-[#9AA4B2] shadow-inner focus:outline-none focus:ring-4 focus:ring-[#9CC7D6]/50 focus:border-[#8AB7C7] transition"></textarea>
+                            <p id="noteError" class="text-xs text-[#DC2626] mt-1"></p>
+                        </div>
+                        <div class="md:col-span-2 mt-2">
+                            <button type="submit"
+                                    class="w-full h-12 md:h-14 rounded-full bg-[#1F1F1F] text-white font-semibold hover:bg-[#151515] transition active:scale-[0.99]">
+                                Save Metrics
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics Records Table -->
+    <div class="max-w-4xl mx-auto px-4 md:px-6 py-10 md:py-16">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Body Metrics Records</h2>
+            <div class="overflow-x-auto table-responsive">
+                <table class="min-w-full text-sm bg-white rounded-2xl shadow overflow-hidden">
+                    <thead class="bg-slate-100 text-slate-600">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Weight (kg)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Body Fat (%)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Visceral Fat</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Note</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metricsTableBody" class="divide-y divide-gray-200">
+                        <!-- Metrics records will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const bodyMetricsForm = document.getElementById('bodyMetricsForm');
+        const dateInput = document.getElementById('date');
+        const weightKgInput = document.getElementById('weightKg');
+        const bodyFatPctInput = document.getElementById('bodyFatPct');
+        const visceralFatInput = document.getElementById('visceralFat');
+        const noteInput = document.getElementById('note');
+        const metricsTableBody = document.getElementById('metricsTableBody');
+
+        // Error message elements
+        const dateError = document.getElementById('dateError');
+        const weightKgError = document.getElementById('weightKgError');
+        const bodyFatPctError = document.getElementById('bodyFatPctError');
+        const visceralFatError = document.getElementById('visceralFatError');
+        const noteError = document.getElementById('noteError');
+
+        let store = {
+            metrics: []
+        };
+
+        function loadStore() {
+            const storedData = localStorage.getItem('gymmetrics:v1');
+            if (storedData) {
+                store = JSON.parse(storedData);
+            }
+        }
+
+        function saveStore() {
+            localStorage.setItem('gymmetrics:v1', JSON.stringify(store));
+        }
+
+        function generateUUID() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function clearErrors() {
+            dateError.textContent = '';
+            weightKgError.textContent = '';
+            bodyFatPctError.textContent = '';
+            visceralFatError.textContent = '';
+            noteError.textContent = '';
+        }
+
+        function validateForm() {
+            clearErrors();
+            let isValid = true;
+
+            if (!dateInput.value) {
+                dateError.textContent = 'Date is required.';
+                isValid = false;
+            }
+            if (isNaN(parseFloat(weightKgInput.value)) || parseFloat(weightKgInput.value) < 1) {
+                weightKgError.textContent = 'Weight (kg) must be a number greater than or equal to 1.';
+                isValid = false;
+            }
+            if (isNaN(parseFloat(bodyFatPctInput.value)) || parseFloat(bodyFatPctInput.value) < 1 || parseFloat(bodyFatPctInput.value) > 75) {
+                bodyFatPctError.textContent = 'Body Fat (%) must be a number between 1 and 75.';
+                isValid = false;
+            }
+            if (isNaN(parseFloat(visceralFatInput.value)) || parseFloat(visceralFatInput.value) < 1) {
+                visceralFatError.textContent = 'Visceral Fat must be a number greater than or equal to 1.';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function renderMetrics() {
+            metricsTableBody.innerHTML = '';
+            store.metrics.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
+            store.metrics.forEach(metric => {
+                const row = metricsTableBody.insertRow();
+                row.classList.add('table-row', 'border-t');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Date">${metric.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Weight (kg)">${metric.weightKg}</td>
+                    <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Body Fat (%)">${metric.bodyFatPct}</td>
+                    <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Visceral Fat">${metric.visceralFat}</td>
+                    <td class="px-6 py-4 whitespace-nowrap table-cell" data-label="Note">${metric.note || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium table-cell" data-label="Actions">
+                        <button data-id="${metric.id}" data-action="edit" class="text-blue-600 hover:underline mr-2">Edit</button>
+                        <button data-id="${metric.id}" data-action="delete" class="text-red-600 hover:underline">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        bodyMetricsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const date = dateInput.value;
+            const weightKg = parseFloat(weightKgInput.value);
+            const bodyFatPct = parseFloat(bodyFatPctInput.value);
+            const visceralFat = parseFloat(visceralFatInput.value);
+            const note = noteInput.value.trim();
+            const id = bodyMetricsForm.dataset.editingId || generateUUID();
+
+            const existingMetricIndex = store.metrics.findIndex(m => m.id === id);
+
+            if (existingMetricIndex > -1) {
+                // Update existing metric
+                store.metrics[existingMetricIndex] = { ...store.metrics[existingMetricIndex], date, weightKg, bodyFatPct, visceralFat, note };
+            } else {
+                // Add new metric
+                store.metrics.push({ id, date, weightKg, bodyFatPct, visceralFat, note, createdAt: new Date().toISOString() });
+            }
+
+            saveStore();
+            renderMetrics();
+            bodyMetricsForm.reset();
+            delete bodyMetricsForm.dataset.editingId; // Clear editing state
+            dateInput.value = new Date().toISOString().split('T')[0]; // Set default date
+        });
+
+        metricsTableBody.addEventListener('click', (e) => {
+            const target = e.target;
+            const id = target.dataset.id;
+            const action = target.dataset.action;
+
+            if (action === 'delete') {
+                if (confirm('Are you sure you want to delete this record?')) {
+                    store.metrics = store.metrics.filter(metric => metric.id !== id);
+                    saveStore();
+                    renderMetrics();
+                }
+            } else if (action === 'edit') {
+                const metricToEdit = store.metrics.find(metric => metric.id === id);
+                if (metricToEdit) {
+                    dateInput.value = metricToEdit.date;
+                    weightKgInput.value = metricToEdit.weightKg;
+                    bodyFatPctInput.value = metricToEdit.bodyFatPct;
+                    visceralFatInput.value = metricToEdit.visceralFat;
+                    noteInput.value = metricToEdit.note;
+                    bodyMetricsForm.dataset.editingId = metricToEdit.id; // Store ID for update
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top to show form
+                }
+            }
+        });
+
+        loadStore();
+        renderMetrics();
+        dateInput.value = new Date().toISOString().split('T')[0]; // Set default date
+    </script>
+</body>
+</html>
